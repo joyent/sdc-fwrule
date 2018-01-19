@@ -1,2 +1,5 @@
+/lib/parser.js
 /node_modules
 /coverage
+.*.sw[a-z]
+*.tgz

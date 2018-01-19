@@ -13,14 +13,16 @@ Adding and updating rules takes effect immediately.  Adding or removing
 tags on a VM causes rules that apply to those tags to be added or removed
 immediately.
 
-In the case of two rules that affect the same VM and port, the rule that
-goes counter to the default policy takes precedence.  This means:
+In the case of two rules that affect the same VM and port and have the same
+priority level (0 when one isn't specified), the rule that goes counter to
+the default policy takes precedence by default. This means:
 
 * If you have an incoming BLOCK and an incoming ALLOW rule for the
-  same VM and port, the ALLOW will override.
+  same VM and port of the same priority, the ALLOW will override.
+  Give the BLOCK a higher priority to have it applied first.
 * If you have an outgoing BLOCK and an outgoing ALLOW rule for the
-  same VM and port, the BLOCK will override.
-
+  same VM and port of the same priority, the BLOCK will override.
+  Give the ALLOW a higher priority to have it applied first.
 
 # Rule payload
 
@@ -267,6 +269,27 @@ And to block outgoing replies:
     FROM all vms TO any BLOCK icmp TYPE 0
     FROM all vms TO any BLOCK icmp6 TYPE 129
 
+
+# Priority
+
+    priority <level>
+
+Specifying a priority for a rule allows defining its relation with other rules.
+By default, a rule has a priority level of 0, the lowest priority. Rules with a
+higher priority will be handled first.
+
+**Examples:**
+
+    FROM any TO tag mta ALLOW tcp PORT 25
+    FROM subnet 10.20.30.0/24 TO tag mta BLOCK tcp PORT 25 PRIORITY 1
+
+Allows traffic from anyone but 10.20.30.0/24 to access an MTA.
+
+    FROM all vms TO any BLOCK tcp PORT all
+    FROM all vms TO any ALLOW tcp PORT 22 PRIORITY 1
+
+Blocks all outbound traffic, overriding the default outbound policy,
+except for SSH.
 
 # Examples
 

@@ -20,7 +20,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright 2017, Joyent, Inc. All rights reserved.
+ * Copyright (c) 2018, Joyent, Inc. All rights reserved.
  *
  *
  * fwadm: firewall rule parser grammar
@@ -87,6 +87,8 @@ t                       {digit}{1,3}
 "type"                  return 'TYPE';
 "CODE"                  return 'CODE';
 "code"                  return 'CODE';
+"PRIORITY"              return 'PRIORITY';
+"priority"              return 'PRIORITY';
 
 \"(?:\\["bfnrt/()\\]|\\"u"[a-fA-F0-9]{4}|[^"\\])*\"  yytext = yy.tagUnescape(yytext.substr(1,yyleng-2)); return 'STRING';
 {t}'.'{t}'.'{t}'.'{t}          return 'IPV4ADDR';
@@ -102,8 +104,16 @@ t                       {digit}{1,3}
 start
     : FROM target_list TO target_list action protocol EOF
         { return { 'from': $2, 'to': $4, 'action': $5, 'protocol': $6 }; }
+    | FROM target_list TO target_list action protocol PRIORITY priolevel EOF
+        { yy.validateOKVersion(4, 'priority levels');
+          return { 'from': $2, 'to': $4, 'action': $5, 'protocol': $6, 'priority': $8 }; }
     ;
 
+priolevel
+    : WORD
+        { yy.validatePriorityLevel($1);
+          $$ = Number($1) }
+    ;
 
 /* List of targets for 'FROM' and 'TO' */
 target_list

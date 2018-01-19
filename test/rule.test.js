@@ -20,7 +20,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2016, Joyent, Inc. All rights reserved.
+ * Copyright (c) 2018, Joyent, Inc. All rights reserved.
  *
  *
  * Unit tests for the firewall rule object
@@ -87,6 +87,7 @@ function testTagInRules(t, unquotedOK, txtIn, txtOut, val) {
             enabled: true,
             ports: [ 80 ],
             action: 'allow',
+            priority: 0,
             protocol: 'tcp',
             uuid: rule.uuid,
             version: rule.version
@@ -179,6 +180,7 @@ test('all target types', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -245,6 +247,7 @@ test('any', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -299,6 +302,7 @@ test('all vms', function (t) {
         owner_uuid: owner,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -340,6 +344,7 @@ test('tags', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ 80 ],
         to: {
@@ -385,6 +390,7 @@ test('tag "hasOwnProperty"', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ 80 ],
         to: {
@@ -443,6 +449,7 @@ test('multiple ports and owner_uuid', function (t) {
             wildcards: []
         },
         owner_uuid: inRule1.owner_uuid,
+        priority: 0,
         protocol: 'tcp',
         ports: [ 1002, 1052 ],
         to: {
@@ -517,6 +524,7 @@ test('icmp', function (t) {
         enabled: true,
         types: [ '8' ],
         action: 'allow',
+        priority: 0,
         protocol: 'icmp',
         uuid: rule.uuid,
         version: rule.version
@@ -569,6 +577,7 @@ test('icmp with code', function (t) {
         enabled: true,
         types: [ '8:0' ],
         action: 'allow',
+        priority: 0,
         protocol: 'icmp',
         uuid: rule.uuid,
         version: rule.version
@@ -622,6 +631,7 @@ test('icmp: multiple types', function (t) {
         enabled: true,
         types: [ '8:0', '11:0', '30' ],
         action: 'allow',
+        priority: 0,
         protocol: 'icmp',
         uuid: rule.uuid,
         version: rule.version
@@ -677,6 +687,7 @@ test('sorting: icmp codes', function (t) {
         enabled: true,
         types: [ '3:1', '3:5', '3:11', '8:0', '30', '40' ],
         action: 'allow',
+        priority: 0,
         protocol: 'icmp',
         uuid: rule.uuid,
         version: rule.version
@@ -732,6 +743,7 @@ test('sorting: icmp6 codes', function (t) {
         enabled: true,
         types: [ '3:1', '3:5', '3:11', '8:0', '30', '40' ],
         action: 'allow',
+        priority: 0,
         protocol: 'icmp6',
         uuid: rule.uuid,
         version: rule.version
@@ -777,6 +789,7 @@ test('sorting: ports', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ 6, 10, 80, 1002, 1052, 30245 ],
         to: {
@@ -825,6 +838,7 @@ test('sorting: port ranges', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ { start: 6, end: 11 }, 10, { start: 20, end: 40 },
             80, 1002, 1052, 30245 ],
@@ -877,6 +891,7 @@ test('single port range', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ { start: 50, end: 50 } ],
         to: {
@@ -928,6 +943,7 @@ test('port ALL', function (t) {
                 tags: [],
                 wildcards: []
             },
+            priority: 0,
             protocol: 'tcp',
             ports: [ 'all' ],
             to: {
@@ -976,6 +992,7 @@ test('tags: equal', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ 80 ],
         to: {
@@ -1023,6 +1040,7 @@ test('multiple tags: equal', function (t) {
             tags: [],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ 80 ],
         to: {
@@ -1075,6 +1093,7 @@ test('multiple tags: multiple values', function (t) {
             tags: [ 'some-tag' ],
             wildcards: []
         },
+        priority: 0,
         protocol: 'tcp',
         ports: [ 80 ],
         to: {
@@ -1138,6 +1157,7 @@ test('multiple tags: multiple quoted values', function (t) {
             wildcards: []
         },
         owner_uuid: owner,
+        priority: 0,
         protocol: 'tcp',
         ports: [ 80 ],
         to: {
@@ -1213,6 +1233,7 @@ test('IPv6 sources', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -1277,6 +1298,7 @@ test('IPv6 subnet sources', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -1341,6 +1363,7 @@ test('IPv6 destinations', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -1405,6 +1428,7 @@ test('IPv6 subnet destinations', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'block',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -1471,6 +1495,7 @@ test('Mixed IPv4 and IPv6', function (t) {
         enabled: true,
         ports: [ 80 ],
         action: 'allow',
+        priority: 0,
         protocol: 'tcp',
         uuid: rule.uuid,
         version: rule.version
@@ -1550,7 +1575,7 @@ test('Tag names and values: Keywords', function (t) {
     var kws = [
         'tag', 'from', 'to', 'ip', 'subnet', 'vm', 'any', 'all', 'all vms',
         'vms', 'or', 'and', 'block', 'allow', 'port', 'ports', 'tcp', 'udp',
-        'icmp', 'icmp6', 'type', 'code'
+        'icmp', 'icmp6', 'type', 'code', 'priority'
     ];
 
     var check = [];
@@ -1697,4 +1722,142 @@ test('Tag names and values: Unicode whitespace characters', function (t) {
     });
 
     checkTagsInRules(t, check);
+});
+
+
+test('Priority levels', function (t) {
+    [
+        [ 'FROM tag "a" TO tag "b" ALLOW tcp PORT 80 PRIORITY 25',
+          { priority: 25, protocol: 'tcp', ports: [ 80 ] } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW tcp PORT 443 PRIORITY 49',
+          { priority: 49, protocol: 'tcp', ports: [ 443 ] } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW udp PORT all PRIORITY 72',
+          { priority: 72, protocol: 'udp', ports: [ 'all' ] } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW udp PORTS 1 - 9 PRIORITY 10',
+          { priority: 10, protocol: 'udp', ports: [ { start: 1, end: 9 } ] } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW icmp TYPE 0 PRIORITY 15',
+          { priority: 15, protocol: 'icmp', types: [ '0' ] } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW icmp TYPE 8 CODE 0 PRIORITY 20',
+          { priority: 20, protocol: 'icmp', types: [ '8:0' ] } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW icmp6 TYPE all PRIORITY 100',
+          { priority: 100, protocol: 'icmp6', types: [ 'all' ] } ],
+        [ 'FROM tag "a" TO tag "b" BLOCK icmp6 TYPE 129 PRIORITY 20',
+          { priority: 20, protocol: 'icmp6', types: [ '129' ], action: 'block' } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW icmp6 TYPE 128 CODE 0 PRIORITY 50',
+          { priority: 50, protocol: 'icmp6', types: [ '128:0' ] } ]
+    ].forEach(function (data, i) {
+        var desc = 'Priority Levels: ' + i;
+        var ruleTxt = data[0];
+        var rule = fwrule.create({
+            rule: ruleTxt,
+            created_by: 'fwadm',
+            description: desc,
+            enabled: true,
+            version: fwrule.generateVersion()
+        });
+
+        var raw = {
+            from: {
+                ips: [],
+                subnets: [],
+                vms: [],
+                tags: ['a'],
+                wildcards: []
+            },
+            to: {
+                ips: [],
+                subnets: [],
+                vms: [],
+                tags: ['b'],
+                wildcards: []
+            },
+            created_by: 'fwadm',
+            description: desc,
+            enabled: true,
+            action: 'allow',
+            uuid: rule.uuid,
+            version: rule.version
+        };
+
+        for (var k in data[1]) {
+            raw[k] = data[1][k];
+        }
+
+        t.deepEqual(rule.raw(), raw, 'rule.raw()');
+        t.deepEqual(rule.from, raw.from, 'rule.from');
+        t.deepEqual(rule.to, raw.to, 'rule.to');
+        t.ok(!rule.allVMs, 'rule.allVMs');
+
+        var ser = {
+            created_by: 'fwadm',
+            description: desc,
+            enabled: true,
+            global: true,
+            rule: ruleTxt,
+            uuid: rule.uuid,
+            version: rule.version
+        };
+
+        t.deepEqual(rule.serialize(), ser, 'rule.serialize()');
+    });
+
+    t.end();
+});
+
+
+test('Priority level 0 is implicit', function (t) {
+    var desc = 'Prio Level 0';
+    var ruleTxt = 'FROM tag "a" TO tag "b" ALLOW tcp PORT 80 PRIORITY 0';
+    var rule = fwrule.create({
+        rule: ruleTxt,
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        version: fwrule.generateVersion()
+    });
+
+    var raw = {
+        from: {
+            ips: [],
+            subnets: [],
+            vms: [],
+            tags: ['a'],
+            wildcards: []
+        },
+        to: {
+            ips: [],
+            subnets: [],
+            vms: [],
+            tags: ['b'],
+            wildcards: []
+        },
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        ports: [ 80 ],
+        action: 'allow',
+        priority: 0,
+        protocol: 'tcp',
+        uuid: rule.uuid,
+        version: rule.version
+    };
+
+    t.deepEqual(rule.raw(), raw, 'rule.raw()');
+    t.deepEqual(rule.from, raw.from, 'rule.from');
+    t.deepEqual(rule.to, raw.to, 'rule.to');
+    t.ok(!rule.allVMs, 'rule.allVMs');
+
+    var ser = {
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        global: true,
+        rule: 'FROM tag "a" TO tag "b" ALLOW tcp PORT 80',
+        uuid: rule.uuid,
+        version: rule.version
+    };
+
+    t.deepEqual(rule.serialize(), ser, 'rule.serialize()');
+
+    t.end();
 });

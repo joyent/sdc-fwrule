@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="railroad-diagram" width="669" height="92" viewBox="0 0 669 92">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="railroad-diagram" width="925" height="92" viewBox="0 0 925 92">
 <defs><style type="text/css"><![CDATA[
 svg.railroad-diagram path {
   stroke-width: 3;
@@ -85,6 +85,37 @@ svg.railroad-diagram rect {
 <text x="576" y="35">protocol</text>
 </g>
 <path d="M618 31h10"></path>
-<path d="M 628 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+<g>
+<path d="M628 31h0"></path>
+<path d="M884 31h0"></path>
+<path d="M628 31h20"></path>
+<g>
+<path d="M648 31h216"></path>
+</g>
+<path d="M864 31h20"></path>
+<path d="M628 31a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<g>
+<path d="M648 51h0"></path>
+<path d="M864 51h0"></path>
+<path d="M648 51h10"></path>
+<g>
+<path d="M658 51h0"></path>
+<path d="M742 51h0"></path>
+<rect x="658" y="40" width="84" height="22" rx="10" ry="10"></rect>
+<text x="700" y="55">PRIORITY</text>
+</g>
+<path d="M742 51h10"></path>
+<path d="M752 51h10"></path>
+<g>
+<path d="M762 51h0"></path>
+<path d="M854 51h0"></path>
+<rect x="762" y="40" width="92" height="22"></rect>
+<text x="808" y="55">priolevel</text>
+</g>
+<path d="M854 51h10"></path>
+</g>
+<path d="M864 51a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+</g>
+<path d="M 884 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
 </g>
 </svg>

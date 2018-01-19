@@ -362,6 +362,22 @@ test('Invalid: Parameters for ICMP(6)', function (t) {
 });
 
 
+test('Invalid: Priority Levels', function (t) {
+    checkInvalidRules(t, [
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY -1',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 72.1',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 0x0',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 0x5',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 1e1',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 75d',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 101',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY 0101',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY hello',
+        'FROM any TO any ALLOW TCP PORT 1 PRIORITY "world"'
+    ]);
+});
+
+
 test('port ranges', function (t) {
     var rangeA = {
         from: [ [ 'ip', '1.2.3.4' ] ],
@@ -387,6 +403,35 @@ test('port ranges', function (t) {
 });
 
 
+test('priority levels', function (t) {
+    [
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 0', 0 ],
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 02', 2 ],
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 010', 10 ],
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 1', 1 ],
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 5', 5 ],
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 10', 10 ],
+        [ 'FROM tag a TO tag b ALLOW TCP PORT 1 PRIORITY 100', 100 ]
+    ].forEach(function (data) {
+        try {
+            t.deepEqual(parser.parse(data[0]), {
+                from: [ [ 'tag', 'a' ] ],
+                to: [ [ 'tag', 'b' ] ],
+                action: 'allow',
+                priority: data[1],
+                protocol: {
+                    name: 'tcp',
+                    targets: [ 1 ]
+                }
+            }, data[0]);
+        } catch (err) {
+            t.ifError(err);
+        }
+    });
+    t.end();
+});
+
+
 test('Parser option: maxVersion', function (t) {
     var versionFmt = 'The rule uses a feature (%s) newer than this API allows';
 
@@ -398,14 +443,17 @@ test('Parser option: maxVersion', function (t) {
         [ 'FROM tag a to ip fd00::1 ALLOW tcp PORT 80', 2, 'IPv6' ],
         [ 'FROM tag a to subnet fd00::/64 ALLOW tcp PORT 80', 2, 'IPv6' ],
         [ 'FROM tag a to tag b ALLOW icmp6 TYPE 135', 2, 'IPv6' ],
-        [ 'FROM tag a to tag b ALLOW icmp TYPE ALL', 2, 'all ICMP types' ]
+        [ 'FROM tag a to tag b ALLOW icmp TYPE ALL', 2, 'all ICMP types' ],
+
+        // Version 4 features:
+        [ 'FROM tag a to tag b ALLOW tcp PORT 80 PRIORITY 1', 3, 'priority levels' ]
     ].forEach(function (cfg) {
         var rule = cfg[0];
         var v = cfg[1];
 
         try {
             parser.parse(cfg[0], { maxVersion: v });
-            t.fail(util.format('Should fail in v%d: %d', v, rule));
+            t.fail(util.format('Should fail in v%d: %s', v, rule));
         } catch (err) {
             t.deepEqual(err.message, util.format(versionFmt, cfg[2]),
                 util.format('Correct error message when using v%d: ', v, rule));

@@ -53,7 +53,9 @@ var ruleDiagram = Diagram(
   Choice(0,
     Terminal('ALLOW'),
     Terminal('BLOCK')),
-  NonTerminal('protocol'));
+  NonTerminal('protocol'),
+  Optional(
+    Sequence(Terminal('PRIORITY'), NonTerminal('priolevel')), 'skip'));
 
 var targetListDiagram = Diagram(
     Choice(0,

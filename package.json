@@ -29,6 +29,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
+    "prepublish": "make docs parser",
     "test": "make test"
   },
   "license": "CDDL-1.0"

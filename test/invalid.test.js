@@ -20,7 +20,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright 2017, Joyent, Inc. All rights reserved.
+ * Copyright (c) 2018, Joyent, Inc. All rights reserved.
  *
  *
  * Negative unit tests for the firewall rule object
@@ -186,13 +186,21 @@ var INVALID = [
     [ 'other ports listed with ALL first', {
         rule: 'FROM ip 10.0.0.1 TO all vms ALLOW TCP (port ALL AND port 53)' },
         'rule',
-        'Error at character 47: \'AND\', expected: \'EOF\', \')\', found: AND'
+        'Error at character 47: \'AND\', expected: \'EOF\', \'PRIORITY\', \')\', found: AND'
     ],
 
     [ 'other ports listed with ALL second', {
         rule: 'FROM ip 10.0.0.1 TO all vms ALLOW TCP (port 53 AND port ALL)'
         }, 'rule',
         'Error at character 55: \'ALL\', expected: \'WORD\', found: ALL' ],
+
+    [ 'invalid priority level: too high', {
+        rule: 'FROM tag a TO tag b ALLOW TCP PORT all PRIORITY 101' },
+        'rule', 'Priority level "101" is invalid' ],
+
+    [ 'invalid priority level: not a number', {
+        rule: 'FROM tag a TO tag b ALLOW TCP PORT all PRIORITY immediate' },
+        'rule', 'Priority level "immediate" is invalid' ],
 
     [ 'created_by: object instead of string', {
         created_by: { },

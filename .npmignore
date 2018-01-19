@@ -6,3 +6,5 @@
 /src
 /test
 /tools
+.*.sw[a-z]
+*.tgz
