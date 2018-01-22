@@ -20,7 +20,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright 2017, Joyent, Inc. All rights reserved.
+ * Copyright (c) 2018, Joyent, Inc. All rights reserved.
  *
  *
  * Unit tests for the firewall rule parser
@@ -289,6 +289,20 @@ test('Invalid: Parameters for TCP & UDP', function (t) {
         'FROM any TO any ALLOW udp PORT hello',
         'FROM any TO any ALLOW tcp PORT ssh',
         'FROM any TO any ALLOW udp PORT ssh',
+        'FROM any TO any ALLOW tcp PORT "ssh"',
+        'FROM any TO any ALLOW udp PORT "ssh"',
+        'FROM any TO any ALLOW tcp PORT 50.123',
+        'FROM any TO any ALLOW udp PORT 50.123',
+        'FROM any TO any ALLOW tcp PORT "50"',
+        'FROM any TO any ALLOW udp PORT "50"',
+        'FROM any TO any ALLOW tcp PORT "50.123"',
+        'FROM any TO any ALLOW udp PORT "50.123"',
+        'FROM any TO any ALLOW tcp PORT 0x5',
+        'FROM any TO any ALLOW udp PORT 0x5',
+        'FROM any TO any ALLOW tcp PORT 9e1',
+        'FROM any TO any ALLOW udp PORT 9e1',
+        'FROM any TO any ALLOW tcp PORT 99e-1',
+        'FROM any TO any ALLOW udp PORT 99e-1',
         'FROM any TO any ALLOW tcp PORT _',
         'FROM any TO any ALLOW udp PORT _',
         'FROM any TO any ALLOW tcp PORT *',
@@ -326,8 +340,20 @@ test('Invalid: Parameters for ICMP(6)', function (t) {
         'FROM any TO any ALLOW icmp6 TYPE 1:0',
         'FROM any TO any ALLOW icmp 1:0',
         'FROM any TO any ALLOW icmp6 1:0',
+        'FROM any TO any ALLOW icmp TYPE 0x80',
+        'FROM any TO any ALLOW icmp6 TYPE 0x80',
+        'FROM any TO any ALLOW icmp TYPE 9e1',
+        'FROM any TO any ALLOW icmp6 TYPE 9e1',
+        'FROM any TO any ALLOW icmp TYPE 99e-1',
+        'FROM any TO any ALLOW icmp6 TYPE 99e-1',
         'FROM any TO any ALLOW icmp TYPE 128 CODE foo',
         'FROM any TO any ALLOW icmp6 TYPE 128 CODE foo',
+        'FROM any TO any ALLOW icmp TYPE 128 CODE 0x1',
+        'FROM any TO any ALLOW icmp6 TYPE 128 CODE 0x1',
+        'FROM any TO any ALLOW icmp TYPE 128 CODE 1e1',
+        'FROM any TO any ALLOW icmp6 TYPE 128 CODE 1e1',
+        'FROM any TO any ALLOW icmp TYPE 128 CODE 99e-1',
+        'FROM any TO any ALLOW icmp6 TYPE 128 CODE 99e-1',
         'FROM any TO any ALLOW icmp TYPE 128 CODE *',
         'FROM any TO any ALLOW icmp6 TYPE 128 CODE *',
         'FROM any TO any ALLOW icmp TYPE 128 CODE _',
