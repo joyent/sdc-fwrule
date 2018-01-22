@@ -218,9 +218,11 @@ have an effect.
     udp
     icmp
     icmp6
+    ah
+    esp
 
-The protocol can be one of tcp, udp or icmp(6). The protocol dictates whether
-ports or types can be used (see the Ports section below).
+The protocol can be one of tcp, udp, icmp(6), ah or esp. The protocol dictates
+whether ports or types can be used (see the Ports section below).
 
 
 # Ports
@@ -308,6 +310,13 @@ Allows ssh traffic between all VMs.
     FROM any TO all vms ALLOW tcp port 80
 
 Allow HTTP traffic from any host to all VMs.
+
+    FROM any TO all vms ALLOW ah
+    FROM any TO all vms ALLOW esp
+    FROM any TO all vms ALLOW udp (PORT 500 and PORT 4500)
+
+Allows [IPsec](https://en.wikipedia.org/wiki/IPsec) traffic from any host to
+all VMs.
 
 
 # Error Messages

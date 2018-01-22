@@ -83,7 +83,9 @@ var protoDiagram = Diagram(
         Sequence(Terminal('TCP'), NonTerminal('port_list')),
         Sequence(Terminal('UDP'), NonTerminal('port_list')),
         Sequence(Terminal('ICMP'), NonTerminal('type_list')),
-        Sequence(Terminal('ICMP6'), NonTerminal('type_list'))));
+        Sequence(Terminal('ICMP6'), NonTerminal('type_list')),
+        Terminal('AH'),
+        Terminal('ESP')));
 
 var portListDiagram = Diagram(
     Choice(0,

@@ -48,6 +48,9 @@ function checkInvalidRules(t, toCheck) {
     t.end();
 }
 
+function hasProtoTargets(proto) {
+    return (proto !== 'ah' && proto !== 'esp');
+}
 
 // --- Tests
 
@@ -132,6 +135,26 @@ test('case insensitivity', function (t) {
         }
     };
 
+    var allowAH = {
+        from: [ [ 'wildcard', 'any' ] ],
+        to: [ [ 'wildcard', 'vmall' ] ],
+        action: 'allow',
+        protocol: {
+            name: 'ah',
+            targets: [ 'all' ]
+        }
+    };
+
+    var allowESP = {
+        from: [ [ 'wildcard', 'any' ] ],
+        to: [ [ 'wildcard', 'vmall' ] ],
+        action: 'allow',
+        protocol: {
+            name: 'esp',
+            targets: [ 'all' ]
+        }
+    };
+
     var subnetToAll = {
         from: [ [ 'subnet', '10.8.0.0/16' ] ],
         to: [ [ 'wildcard', 'vmall' ] ],
@@ -162,6 +185,10 @@ test('case insensitivity', function (t) {
         [ util.format('from any to vm %s allow udp ports 50', vm), anyToVM ],
         [ util.format('from ANY to VM %s allow UDP port 50', vm), anyToVM ],
         [ util.format('from any to vm %s allow udp port 50', vm), anyToVM ],
+        [ 'from ANY to ALL VMS allow AH', allowAH ],
+        [ 'from any to all vms allow ah', allowAH ],
+        [ 'from ANY to ALL VMS allow ESP', allowESP ],
+        [ 'from any to all vms allow esp', allowESP ],
         [ 'FROM SUBNET 10.8.0.0/16 TO ALL VMS ALLOW ICMP TYPE 30',
             subnetToAll ],
         [ 'FROM subnet 10.8.0.0/16 TO all vms ALLOW icmp type 30',
@@ -226,6 +253,7 @@ test('incomplete rule text', function (t) {
         'subnet fd00::/64', 'tag foo', 'tag foo = bar',
         'vm ca3eb1d6-1555-44fb-ea1a-ab66f4685214'
     ];
+    var protocols = parser.PROTOCOLS.filter(hasProtoTargets);
     var endings = [ 'port', 'ports', 'ports 1 -', 'ports 1-', 'type',
         'type 128 code' ];
 
@@ -240,7 +268,7 @@ test('incomplete rule text', function (t) {
     }
 
     buildStr('FROM',
-        [ targets, to, targets, parser.ACTIONS, parser.PROTOCOLS, endings ]);
+        [ targets, to, targets, parser.ACTIONS, protocols, endings ]);
 
     checkInvalidRules(t, check);
 });
@@ -446,7 +474,9 @@ test('Parser option: maxVersion', function (t) {
         [ 'FROM tag a to tag b ALLOW icmp TYPE ALL', 2, 'all ICMP types' ],
 
         // Version 4 features:
-        [ 'FROM tag a to tag b ALLOW tcp PORT 80 PRIORITY 1', 3, 'priority levels' ]
+        [ 'FROM tag a to tag b ALLOW tcp PORT 80 PRIORITY 1', 3, 'priority levels' ],
+        [ 'FROM tag a to tag b ALLOW ah', 3, 'AH' ],
+        [ 'FROM tag a to tag b ALLOW esp', 3, 'ESP' ]
     ].forEach(function (cfg) {
         var rule = cfg[0];
         var v = cfg[1];

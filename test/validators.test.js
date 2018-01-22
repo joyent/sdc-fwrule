@@ -20,7 +20,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright 2016, Joyent, Inc. All rights reserved.
+ * Copyright (c) 2018, Joyent, Inc. All rights reserved.
  *
  */
 
@@ -139,6 +139,10 @@ test('ports', function (t) {
 test('protocols', function (t) {
     var i;
     var valid = [
+        'ah',
+        'AH',
+        'esp',
+        'ESP',
         'tcp',
         'TCP',
         'udp',
@@ -190,6 +194,7 @@ test('actions', function (t) {
         '65536',
         '',
         'something',
+        'pass',
         'permit',
         'obstruct'
     ];

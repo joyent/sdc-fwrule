@@ -1575,7 +1575,7 @@ test('Tag names and values: Keywords', function (t) {
     var kws = [
         'tag', 'from', 'to', 'ip', 'subnet', 'vm', 'any', 'all', 'all vms',
         'vms', 'or', 'and', 'block', 'allow', 'port', 'ports', 'tcp', 'udp',
-        'icmp', 'icmp6', 'type', 'code', 'priority'
+        'icmp', 'icmp6', 'type', 'code', 'priority', 'ah', 'esp'
     ];
 
     var check = [];
@@ -1727,6 +1727,14 @@ test('Tag names and values: Unicode whitespace characters', function (t) {
 
 test('Priority levels', function (t) {
     [
+        [ 'FROM tag "a" TO tag "b" ALLOW ah PRIORITY 12',
+          { priority: 12, protocol: 'ah' } ],
+        [ 'FROM tag "a" TO tag "b" BLOCK ah PRIORITY 29',
+          { priority: 29, protocol: 'ah', action: 'block' } ],
+        [ 'FROM tag "a" TO tag "b" ALLOW esp PRIORITY 31',
+          { priority: 31, protocol: 'esp' } ],
+        [ 'FROM tag "a" TO tag "b" BLOCK esp PRIORITY 99',
+          { priority: 99, protocol: 'esp', action: 'block' } ],
         [ 'FROM tag "a" TO tag "b" ALLOW tcp PORT 80 PRIORITY 25',
           { priority: 25, protocol: 'tcp', ports: [ 80 ] } ],
         [ 'FROM tag "a" TO tag "b" ALLOW tcp PORT 443 PRIORITY 49',
@@ -1853,6 +1861,120 @@ test('Priority level 0 is implicit', function (t) {
         enabled: true,
         global: true,
         rule: 'FROM tag "a" TO tag "b" ALLOW tcp PORT 80',
+        uuid: rule.uuid,
+        version: rule.version
+    };
+
+    t.deepEqual(rule.serialize(), ser, 'rule.serialize()');
+
+    t.end();
+});
+
+
+test('AH protocol', function (t) {
+    var desc = 'AH protocol';
+    var ruleTxt = 'FROM tag "a" TO tag "b" ALLOW ah';
+    var rule = fwrule.create({
+        rule: ruleTxt,
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        version: fwrule.generateVersion()
+    });
+
+    var raw = {
+        from: {
+            ips: [],
+            subnets: [],
+            vms: [],
+            tags: ['a'],
+            wildcards: []
+        },
+        to: {
+            ips: [],
+            subnets: [],
+            vms: [],
+            tags: ['b'],
+            wildcards: []
+        },
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        action: 'allow',
+        priority: 0,
+        protocol: 'ah',
+        uuid: rule.uuid,
+        version: rule.version
+    };
+
+    t.deepEqual(rule.raw(), raw, 'rule.raw()');
+    t.deepEqual(rule.from, raw.from, 'rule.from');
+    t.deepEqual(rule.to, raw.to, 'rule.to');
+    t.ok(!rule.allVMs, 'rule.allVMs');
+
+    var ser = {
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        global: true,
+        rule: ruleTxt,
+        uuid: rule.uuid,
+        version: rule.version
+    };
+
+    t.deepEqual(rule.serialize(), ser, 'rule.serialize()');
+
+    t.end();
+});
+
+
+test('ESP protocol', function (t) {
+    var desc = 'ESP protocol';
+    var ruleTxt = 'FROM tag "a" TO tag "b" ALLOW esp';
+    var rule = fwrule.create({
+        rule: ruleTxt,
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        version: fwrule.generateVersion()
+    });
+
+    var raw = {
+        from: {
+            ips: [],
+            subnets: [],
+            vms: [],
+            tags: ['a'],
+            wildcards: []
+        },
+        to: {
+            ips: [],
+            subnets: [],
+            vms: [],
+            tags: ['b'],
+            wildcards: []
+        },
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        action: 'allow',
+        priority: 0,
+        protocol: 'esp',
+        uuid: rule.uuid,
+        version: rule.version
+    };
+
+    t.deepEqual(rule.raw(), raw, 'rule.raw()');
+    t.deepEqual(rule.from, raw.from, 'rule.from');
+    t.deepEqual(rule.to, raw.to, 'rule.to');
+    t.ok(!rule.allVMs, 'rule.allVMs');
+
+    var ser = {
+        created_by: 'fwadm',
+        description: desc,
+        enabled: true,
+        global: true,
+        rule: ruleTxt,
         uuid: rule.uuid,
         version: rule.version
     };

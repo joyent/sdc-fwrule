@@ -83,6 +83,10 @@ t                       {digit}{1,3}
 "icmp"                  return 'ICMP';
 "ICMP6"                 return 'ICMP6';
 "icmp6"                 return 'ICMP6';
+"AH"                    return 'AH';
+"ah"                    return 'AH';
+"ESP"                   return 'ESP';
+"esp"                   return 'ESP';
 "TYPE"                  return 'TYPE';
 "type"                  return 'TYPE';
 "CODE"                  return 'CODE';
@@ -228,6 +232,12 @@ protocol
     | ICMP6 type_list
         { yy.validateOKVersion(3, 'IPv6');
           $$ = { 'name': $1.toLowerCase(), 'targets': $2 }; }
+    | AH
+        { yy.validateOKVersion(4, 'AH');
+          $$ = { 'name': $1.toLowerCase(), 'targets': [ 'all' ] }; }
+    | ESP
+        { yy.validateOKVersion(4, 'ESP');
+          $$ = { 'name': $1.toLowerCase(), 'targets': [ 'all' ] }; }
     ;
 
 
