@@ -51,40 +51,30 @@ a rule.
 
 Firewall rules are in the following format:
 
-    FROM &lt;from targets> TO &lt;to targets> &lt;action> &lt;protocol> &lt;ports or types>
-    
-The parameters are the following:
+<p style="text-align: center">
+<img alt="Rules are of the form: FROM target_list TO target_list action protocol ports/types" src="./media/img/rule.svg" />
+</p>
+
+Affected sources and destinations can be defined as a list of targets in the
+following syntax:
+
+<p style="text-align: center">
+<img alt="Target List Keywords: ALL VMS, ANY, or a list of targets separated by OR" src="./media/img/target-list.svg" />
+</p>
 
 **from targets** and **to targets** can be any of the following types
 (see the Target Types section below):
 
-* vm &lt;uuid>
-* ip &lt;IPv4 or IPv6 address>
-* subnet &lt;subnet CIDR>
-* tag &lt;tag name>
-* tag &lt;tag name>=&lt;tag value>
-* a target list of up to 32 of the above
-* all vms
-* any
+<p style="text-align: center">
+<img alt="Target Keywords: VM, IP, SUBNET, TAG" src="./media/img/target.svg" />
+</p>
 
-**action** can be one of (see the Actions section below):
+Protocols can be targeted using:
 
-* ALLOW
-* BLOCK
+<p style="text-align: center">
+<img alt="Protocol Keywords: TCP, UDP, ICMP, ICMP6" src="./media/img/protocol.svg" />
+</p>
 
-**protocol** can be one of (see the Protocols section below):
-
-* tcp
-* udp
-* icmp
-* icmp6
-
-**ports** or **types** can be one of (see the Ports section below):
-
-* port &lt;port number> (if protocol is tcp or udp)
-* ports &lt;port numbers and ranges> (if protocol is tcp or udp)
-* type &lt;ICMP type> (if protocol is icmp)
-* type &lt;ICMP type> code &lt;ICMP code> (if protocol is icmp)
 
 
 The limits for the parameters are:
@@ -98,7 +88,7 @@ The limits for the parameters are:
 
 ## vm
 
-    vm &lt;uuid>
+    vm <uuid>
 
 Targets the VM with that UUID.
 
@@ -110,7 +100,7 @@ Allows HTTP traffic from any host to VM 04128...
 
 ## ip
 
-    ip &lt;IP address>
+    ip <IP address>
 
 Targets the specified IPv4 or IPv6 address.
 
@@ -122,7 +112,7 @@ Blocks SMTP traffic to that IP.
 
 ## subnet
 
-    subnet &lt;subnet CIDR>
+    subnet <subnet CIDR>
 
 Targets the specified IPv4 or IPv6 subnet range.
 
@@ -140,9 +130,9 @@ Allows HTTPS traffic from a private IPv6 /64 to the specified VM.
 
 ## tag
 
-    tag &lt;name>
-    tag &lt;name> = &lt;value>
-    tag "&lt;name with spaces>" = "&lt;value with spaces>"
+    tag <name>
+    tag <name> = <value>
+    tag "<name with spaces>" = "<value with spaces>"
 
 Targets all VMs with the specified tag, or all VMs with the specified tag
 and value.  Both tag name and value can be quoted if they contain spaces.
@@ -188,7 +178,7 @@ Allows HTTP traffic from any IP to all VMs.
 
 ## target list
 
-    ( &lt;target> OR &lt;target> OR ... )
+    ( <target> OR <target> OR ... )
 
 The vm, ip, subnet and tag target types can be combined into a list surrounded
 by parentheses and joined by OR.
@@ -233,22 +223,15 @@ ports or types can be used (see the Ports section below).
 
 # Ports
 
-    port &lt;port number>
-    ( port &lt;port number> AND port &lt;port number> ... )
-    ports &lt;port number or range>
-    ports &lt;port number or range>, &lt;port number or range>, ...
-    type &lt;icmp type>
-    type &lt;icmp type> code &lt;icmp code>
-    ( type &lt;icmp type> AND type &lt;icmp type> code &lt;icmp code> AND ... )
+<p style="text-align: center">
+<img alt="All, specific, or ranges of ports can be allowed and blocked" src="./media/img/port-list.svg" />
+</p>
 
 For TCP and UDP, this specifies the port numbers that the rule applies to.
 Port numbers must be between 1 and 65535, inclusive. Ranges are written as two
 port numbers separated by a - (hyphen), with the lower number coming first, with
 optional spaces around the hyphen. Port ranges are inclusive, so writing the
 range "20 - 22" would cause the rule to apply to the ports 20, 21 and 22.
-
-For ICMP, this specifies the ICMP type and optional code that the rule
-applies to.  Types and codes must be between 0 and 255, inclusive.
 
 **Examples:**
 
@@ -260,6 +243,18 @@ Allows HTTP and HTTPS traffic from any IP to all webservers.
 
 Allows traffic on HTTP, HTTPS and common alternative HTTP ports from any IP to
 all webservers.
+
+
+# ICMP Types
+
+<p style="text-align: center">
+<img alt="All ICMP types can be specified, or a list of specific ones" src="./media/img/type-list.svg" />
+</p>
+
+For ICMP, this specifies the ICMP type and optional code that the rule
+applies to.  Types and codes must be between 0 and 255, inclusive.
+
+**Examples:**
 
     FROM any TO all vms ALLOW icmp TYPE 8 CODE 0
 

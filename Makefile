@@ -94,7 +94,7 @@ docs/examples.md: docs/examples.md.in
 	$(RAMSEY) -d etc/examples -f etc/examples.json docs/examples.md.in $@
 
 docs/rules.md: docs/rules.md.in
-	$(RAMSEY) -p wrap=0 docs/rules.md.in $@
+	$(RAMSEY) -f etc/rules.json -p wrap=0 docs/rules.md.in $@
 
 #
 # This rule enables other rules that use files from a git submodule to have
