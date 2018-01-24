@@ -293,8 +293,14 @@ var INVALID = [
         }, 'rule',
         'maximum of 24 targets allowed per side'],
 
-    [ 'rule: max number of ports', {
-        rule: 'FROM all vms TO ip 192.168.5.4 BLOCK TCP ' + nPorts(9)
+    [ 'rule: max number of ports (small)', {
+        rule: 'FROM all vms TO ip 192.168.5.4 BLOCK TCP ' + nPorts(25),
+        maxVersion: 3
+        }, 'rule',
+        'maximum of 8 ports allowed'],
+
+    [ 'rule: max number of ports (large)', {
+        rule: 'FROM all vms TO ip 192.168.5.4 BLOCK TCP ' + nPorts(25)
         }, 'rule',
         'maximum of 24 ports allowed'],
 
@@ -338,13 +344,25 @@ var INVALID = [
         }, 'rule',
         'ICMP code \"270\" is invalid'],
 
-    [ 'rule: max number of ICMPv6 types', {
-        rule: 'FROM all vms TO ip fd00::45 BLOCK ICMP ' + nTypes(9)
+    [ 'rule: max number of ICMPv6 types (small)', {
+        rule: 'FROM all vms TO ip fd00::45 BLOCK ICMP ' + nTypes(25),
+        maxVersion: 3
+        }, 'rule',
+        'maximum of 8 types allowed'],
+
+    [ 'rule: max number of ICMPv6 types (large)', {
+        rule: 'FROM all vms TO ip fd00::45 BLOCK ICMP ' + nTypes(25)
         }, 'rule',
         'maximum of 24 types allowed'],
 
-    [ 'rule: max number of ICMP types', {
-        rule: 'FROM all vms TO ip 192.168.5.4 BLOCK ICMP ' + nTypes(9)
+    [ 'rule: max number of ICMP types (small)', {
+        rule: 'FROM all vms TO ip 192.168.5.4 BLOCK ICMP ' + nTypes(9),
+        maxVersion: 3
+        }, 'rule',
+        'maximum of 8 types allowed'],
+
+    [ 'rule: max number of ICMP types (large)', {
+        rule: 'FROM all vms TO ip 192.168.5.4 BLOCK ICMP ' + nTypes(25)
         }, 'rule',
         'maximum of 24 types allowed']
 ];
@@ -358,6 +376,10 @@ test('Invalid rules', function (t) {
         var opts = { enforceSubnetMask: true };
         var rule = data[1];
         var thrown = false;
+
+        if (rule.maxVersion) {
+            opts.maxVersion = rule.maxVersion;
+        }
 
         try {
             if (field === 'global') {
